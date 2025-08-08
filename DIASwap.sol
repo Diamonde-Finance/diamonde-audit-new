@@ -328,11 +328,11 @@ contract UniswapV2Pair is ReentrancyGuard {
     /* ---- ERC‑20 Lite ---- */
     function transfer(address to, uint256 value) external nonReentrant returns (bool) {
         require(balanceOf[msg.sender] >= value, "Insufficient balance");
+        _updateFee(msg.sender);
+        _updateFee(to);
         balanceOf[msg.sender] -= value;
         balanceOf[to] += value;
 
-        _updateFee(msg.sender);
-        _updateFee(to);
         emit Transfer(msg.sender, to, value);
         return true;
     }
@@ -347,12 +347,12 @@ contract UniswapV2Pair is ReentrancyGuard {
         require(balanceOf[from] >= value, "Insufficient balance");
         require(allowance[from][msg.sender] >= value, "Allowance exceeded");
 
+        _updateFee(from);
+        _updateFee(to);
         balanceOf[from] -= value;
         balanceOf[to] += value;
         allowance[from][msg.sender] -= value;
 
-        _updateFee(from);
-        _updateFee(to);
         emit Transfer(from, to, value);
         return true;
     }
