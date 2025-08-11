@@ -332,6 +332,8 @@ contract UniswapV2Pair is ReentrancyGuard {
         _updateFee(to);
         balanceOf[msg.sender] -= value;
         balanceOf[to] += value;
+        _updateFee(msg.sender);
+        _updateFee(to);
 
         emit Transfer(msg.sender, to, value);
         return true;
@@ -352,6 +354,8 @@ contract UniswapV2Pair is ReentrancyGuard {
         balanceOf[from] -= value;
         balanceOf[to] += value;
         allowance[from][msg.sender] -= value;
+        _updateFee(msg.sender);
+        _updateFee(to);
 
         emit Transfer(from, to, value);
         return true;
