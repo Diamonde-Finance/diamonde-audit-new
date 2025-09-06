@@ -4,7 +4,26 @@ ABI reference for release  DIA  exercise directly on chain
 ABI:
 
 [
- {
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "balanceOfDDIA",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+ 	{
 		"inputs": [
 			{
 				"internalType": "uint256",
