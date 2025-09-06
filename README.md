@@ -50,6 +50,55 @@ ABI reference for withdraw Liquidity directly on chain
 ABI:
 
 [
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "getUserStakingRecord",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "stakingAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "currentDDIAAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalDDIAAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "recordHeight",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "canExerciseAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "nextReward",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
   {
     "inputs": [
       {
