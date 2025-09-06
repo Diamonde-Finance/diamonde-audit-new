@@ -7,25 +7,6 @@ ABI:
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			}
-		],
-		"name": "balanceOfDDIA",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
- 	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "_index",
 				"type": "uint256"
@@ -34,9 +15,19 @@ ABI:
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amdAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_accelerateTime",
+				"type": "uint256"
 			}
 		],
-		"name": "releaseDIAExercise",
+		"name": "exerciseDIA",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
