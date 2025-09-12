@@ -65,9 +65,32 @@ contract DIA {
     }
     // 授权函数
 
+     /// @notice 安全 approve：如果要修改为非零值，必须先清零
     function approve(address spender, uint256 value) external returns (bool) {
+        require(
+            value == 0 || allowance[msg.sender][spender] == 0,
+            "SafeApprove: must reset to 0 before updating"
+        );
         allowance[msg.sender][spender] = value;
         emit Approval(msg.sender, spender, value);
+        return true;
+    }
+
+    /// @notice 增加授权额度
+    function increaseAllowance(address spender, uint256 addedValue) external returns (bool) {
+        uint256 newAllowance = allowance[msg.sender][spender] + addedValue;
+        allowance[msg.sender][spender] = newAllowance;
+        emit Approval(msg.sender, spender, newAllowance);
+        return true;
+    }
+
+    /// @notice 减少授权额度
+    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool) {
+        uint256 oldAllowance = allowance[msg.sender][spender];
+        require(oldAllowance >= subtractedValue, "SafeApprove: decreased allowance below zero");
+        uint256 newAllowance = oldAllowance - subtractedValue;
+        allowance[msg.sender][spender] = newAllowance;
+        emit Approval(msg.sender, spender, newAllowance);
         return true;
     }
 
