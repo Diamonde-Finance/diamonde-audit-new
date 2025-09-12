@@ -78,7 +78,7 @@ contract UniswapV2Pair is ReentrancyGuard {
     uint112 private reserve0;
     uint112 private reserve1;
     uint32  private blockTimestampLast;       // --- patched: 记录最后一次更新时间戳 (<=2^32‑1)
-    uint256 public lastSwapBlock;
+    //uint256 public lastSwapBlock;
     uint256 public totalSupply;                         // LP 总量
     mapping(address => uint256) public balanceOf;       // LP 余额
     mapping(address => mapping(address => uint256)) public allowance;
@@ -111,7 +111,7 @@ contract UniswapV2Pair is ReentrancyGuard {
 
     mapping(address => uint256) public userFee0Debt;
     mapping(address => uint256) public userFee1Debt;
-
+    mapping(address => uint256) public lastSwapBlock;
     /* ---- 构造 ---- */
     constructor() {factory = msg.sender;}
 
@@ -144,7 +144,7 @@ contract UniswapV2Pair is ReentrancyGuard {
      * ====================================================================== */
     function mint(address to) external onlyAuthorized nonReentrant returns (uint256 liquidity) {
         // 防止价格操纵：不能在 swap 后的同一个区块内进行 mint
-        require(block.number > lastSwapBlock || to == treasury || to == autoForwarder, "No mint in same block as swap");
+        require(block.number > lastSwapBlock[msg.sender] || to == treasury || to == autoForwarder, "No mint in same block as swap");
         uint256 _reserve0 = reserve0;
         uint256 _reserve1 = reserve1;
         uint256 balance0 = IERC20(token0).balanceOf(address(this)) - totalFee0;
@@ -267,7 +267,7 @@ contract UniswapV2Pair is ReentrancyGuard {
 
 
         _update(balance0 - fee0, balance1 - fee1);
-        lastSwapBlock = block.number; // 记录 swap 的 block number
+        lastSwapBlock[msg.sender] = block.number; // 记录 swap 的 block number
         emit Swap(
             msg.sender,
             amount0In,
@@ -332,8 +332,6 @@ contract UniswapV2Pair is ReentrancyGuard {
         _updateFee(to);
         balanceOf[msg.sender] -= value;
         balanceOf[to] += value;
-        _updateFee(msg.sender);
-        _updateFee(to);
 
         emit Transfer(msg.sender, to, value);
         return true;
@@ -354,8 +352,6 @@ contract UniswapV2Pair is ReentrancyGuard {
         balanceOf[from] -= value;
         balanceOf[to] += value;
         allowance[from][msg.sender] -= value;
-        _updateFee(msg.sender);
-        _updateFee(to);
 
         emit Transfer(from, to, value);
         return true;
@@ -448,7 +444,7 @@ contract UniswapV2Factory {
         emit PairCreated(token0, token1, pair, allPairs.length);
     }
 
-    function setRouter(address _pair) external {
+    function setRouter(address _pair) external onlyManager{
         address router = IRootDispatch(owner).getSubContractAddress("SWAP_ROUTER");
         UniswapV2Pair(_pair).setRouter(router);
         emit RouterSet(_pair, router);
