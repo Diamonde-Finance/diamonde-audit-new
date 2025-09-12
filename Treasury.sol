@@ -6,6 +6,8 @@ interface IERC20 {
     function mint(address to, uint256 value) external;
 
     function transfer(address to, uint256 value) external returns (bool);
+    
+    function safeTransfer(address to, uint256 value) external returns (bool);
 
     function approve(address spender, uint256 value) external returns (bool);
 
@@ -100,7 +102,7 @@ contract Treasury {
         uint256 currentDDIAAmount; // 最近一次更新后剩余ddia量
         uint256 totalDDIAAmount; // 最近一次更新后已行权ddia总量
         uint256 createHeight;
-        uint256 recordHeight;
+        uint256 recordHeight; 
         uint256 usdtValue; // u本位价值
         address[] referrers;
         uint256[] referrerAMDIndexes;
@@ -269,7 +271,7 @@ contract Treasury {
 
     // 向用户转出 USDT
     function transferUSDT(address _user, uint256 _amount) external onlyContract(manager) {
-        require(IERC20(usdtContract).transfer(_user, _amount), "USDT transfer failed");
+        require(IERC20(usdtContract).safeTransfer(_user, _amount), "USDT transfer failed");
     }
 
     // burn AMD
