@@ -281,8 +281,8 @@ contract UniswapV2Pair is ReentrancyGuard {
 
     /* ---- 兼容 Uniswap V2 的辅助函数 ---- */
     function skim(address to) external nonReentrant onlyAuthorized { // --- patched
-        _safeTransfer(token0, to, IERC20(token0).balanceOf(address(this)) - reserve0);
-        _safeTransfer(token1, to, IERC20(token1).balanceOf(address(this)) - reserve1);
+        _safeTransfer(token0, to, IERC20(token0).balanceOf(address(this)) - reserve0 - totalFee0);  
+        _safeTransfer(token1, to, IERC20(token1).balanceOf(address(this)) - reserve1 - totalFee1);
     }
 
     function sync() external nonReentrant onlyAuthorized { // --- patched
